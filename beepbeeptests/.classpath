@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="resources"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-12">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/Nick/Downloads/mtnp-master/mtnp-master/mtnp.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Nick/Downloads/beepbeep-3-palettes-master/beepbeep-3-palettes-master/jars/mtnp.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Nick/Downloads/beepbeep-3-palettes-master/beepbeep-3-palettes-master/jars/widgets.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Nick/Downloads/jnetcap/jnetpcap.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Nick/Downloads/beepbeep-3 (1).jar"/>
+	<classpathentry kind="lib" path="C:/Users/Nick/Downloads/beepbeep-3-jnetpcap-palette-master/netp.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Nick/Downloads/ipv6-readiness-tools-master/v6App.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
