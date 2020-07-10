@@ -22,7 +22,11 @@ import com.ptr.v6app.jnetpcap.packet.NeighborSolicitation;
 //import ca.uqac.lif.cep.supplychain.labpal.ParcelExperiment;
 import ca.uqac.lif.labpal.Laboratory;
 import ca.uqac.lif.labpal.LatexNamer;
+import ca.uqac.lif.labpal.Region;
 import ca.uqac.lif.labpal.TitleNamer;
+import ca.uqac.lif.labpal.table.ExperimentTable;
+import ca.uqac.lif.mtnp.plot.TwoDimensionalPlot.Axis;
+import ca.uqac.lif.mtnp.plot.gnuplot.Scatterplot;
 
 public class Labo extends Laboratory {
   
@@ -45,6 +49,11 @@ public class Labo extends Laboratory {
    * A title namer
    */
   public static transient TitleNamer s_titleNamer = new TitleNamer();
+  
+  /**
+   * An experiment factory
+   */
+  public transient StreamExperimentFactory m_factory = new StreamExperimentFactory(this);
 
 	@Override
 	public void setup() {
