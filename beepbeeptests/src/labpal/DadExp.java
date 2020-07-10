@@ -7,8 +7,9 @@ public class DadExp extends StreamExperiment {
 	
 	public DadExp()
 	{
-		setProcessor(new DadProcessor());
+		/*setProcessor(new DadProcessor());
 		setSource(new PacketSource("ipv6.DAD.issue.pcap"));
+		setNumEvents(9);*/
 	}
 
 }

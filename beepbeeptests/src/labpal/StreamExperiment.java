@@ -17,6 +17,8 @@
  */
 package labpal;
 
+import ca.uqac.lif.azrael.PrintException;
+import ca.uqac.lif.azrael.size.*;
 import ca.uqac.lif.cep.Connector;
 import ca.uqac.lif.cep.Processor;
 import ca.uqac.lif.cep.Pullable;
@@ -26,8 +28,6 @@ import ca.uqac.lif.cep.tmf.Source;
 import ca.uqac.lif.json.JsonList;
 import ca.uqac.lif.labpal.Experiment;
 import ca.uqac.lif.labpal.ExperimentException;
-import ca.uqac.lif.cep.supplychain.labpal.BoundedSource;
-import ca.uqac.lif.cep.supplychain.labpal.SupplyChainLab;
 
 /**
  * Experiment that connects a source to a processor and measures its
@@ -48,7 +48,7 @@ public abstract class StreamExperiment extends Experiment
   /**
    * Number of events processed
    */
-  public static final transient String LENGTH = "Stream length";
+  public static final transient String LENGTH = "Number of packets";//"Stream length";
 
   /**
    * Whether the experiment uses multiple threads or a single one
@@ -59,6 +59,16 @@ public abstract class StreamExperiment extends Experiment
    * The name of the property being monitored
    */
   public static final transient String PROPERTY = "Property";
+  
+  /**
+   * Memory consumed
+   */
+  public static final transient String MEMORY = "Memory";
+  
+  /**
+   * Maximum memory consumed
+   */
+  public static final transient String MAX_MEMORY = "Max memory";
 
   /**
    * The processor that is being monitored in this experiment
@@ -91,6 +101,13 @@ public abstract class StreamExperiment extends Experiment
    * The description of the property being monitored
    */
   protected transient String m_propertyDescription = null;
+  
+  protected transient int m_numEvents = 0;
+  
+  /**
+   * A helper object used to compute the memory footprint of a processor
+   */
+  protected transient LabSizePrinter m_sizePrinter;
 
   /**
    * Creates a new empty stream experiment
@@ -108,6 +125,8 @@ public abstract class StreamExperiment extends Experiment
     JsonList y = new JsonList();
     y.add(0);
     write(TIME, y);
+    m_sizePrinter = new LabSizePrinter();
+    m_sizePrinter.ignoreAccessChecks(true);
   }
 
   @Override
@@ -115,6 +134,8 @@ public abstract class StreamExperiment extends Experiment
   {
     JsonList length = (JsonList) read(LENGTH);
     JsonList time = (JsonList) read(TIME);
+    JsonList memory = (JsonList) read(MEMORY);
+    int max_memory = 0;
     // Setup processor chain
     Pullable s_p = m_source.getPullableOutput();
     Pushable t_p = m_processor.getPushableInput();
@@ -127,18 +148,33 @@ public abstract class StreamExperiment extends Experiment
     {
       if (event_count % m_eventStep == 0 && event_count > 0)
       {
-        long lap = System.currentTimeMillis();
-        length.add(event_count);
-        time.add(lap - start);
-        float prog = ((float) event_count) / ((float) source_length);
-        setProgression(prog);
+		try
+		{
+		  m_sizePrinter.reset();
+		  int size = (Integer) m_sizePrinter.print(m_processor);
+		  memory.add(size);
+		  max_memory = Math.max(max_memory, size);
+		  write(MAX_MEMORY, max_memory);
+		}
+		catch (PrintException e)
+		{
+		  throw new ExperimentException(e);
+		}
+    	  
+		long lap = System.currentTimeMillis();
+		length.add(event_count);
+		time.add(lap - start);
+		float prog = ((float) event_count) / ((float) source_length);
+		setProgression(prog);
       }
       Object o = s_p.pull();
       t_p.push(o);
       event_count++;
     }
+    
     long end = System.currentTimeMillis();
-    write(THROUGHPUT, (1000f * (float) SupplyChainLab.MAX_TRACE_LENGTH) / ((float) (end - start)));
+    write("Time", (float) (end - start));
+    //write(THROUGHPUT, (1000f * (float) SupplyChainLab.MAX_TRACE_LENGTH) / ((float) (end - start)));
   }
 
   /**
@@ -157,6 +193,11 @@ public abstract class StreamExperiment extends Experiment
   public void setSource(Source s)
   {
     m_source = s;
+  }
+  
+  public void setNumEvents(int n)
+  {
+    m_numEvents = n;
   }
 
   /**
@@ -204,6 +245,7 @@ public abstract class StreamExperiment extends Experiment
     {
       return 0f;
     }
-    return factor * ((float) SupplyChainLab.MAX_TRACE_LENGTH) / m_predictedThroughput;
+    return 0f;
+    //return factor * ((float) SupplyChainLab.MAX_TRACE_LENGTH) / m_predictedThroughput;
   }
 }

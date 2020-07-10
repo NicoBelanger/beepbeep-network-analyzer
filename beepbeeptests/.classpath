@@ -15,5 +15,7 @@
 	<classpathentry kind="lib" path="C:/Users/Nick/Downloads/beepbeep-3-jnetpcap-palette-master/netp.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Nick/Downloads/ipv6-readiness-tools-master/v6App.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Nick/Downloads/supplychain-master/supplychain-lab.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Nick/Downloads/azrael-core (1).jar"/>
+	<classpathentry kind="lib" path="C:/Users/Nick/Downloads/azrael-size (1).jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
